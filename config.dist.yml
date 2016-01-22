@@ -1,0 +1,19 @@
+---
+mappings:
+  - name: "Set Presence to 'OFF' when entering geofence"
+    rules:
+      - "entry == 1"
+      - "name == 'Home'"
+    request:
+      url: http://localhost:8080/rest/items/Presence
+      method: POST
+      body: ON
+  - name: "Set Presence to 'OFF' when leaving geofence"
+      rules:
+        - "entry == 0"
+        - "name == 'Home'"
+      request:
+        url: http://localhost:8080/rest/items/Presence
+        method: POST
+        body: OFF
+
