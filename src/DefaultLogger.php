@@ -9,6 +9,7 @@
 namespace Birke\GeofencyProxy;
 
 use Monolog\Logger;
+use Monolog\Handler\NullHandler;
 use Psr\Log\LoggerInterface;
 
 trait DefaultLogger
@@ -20,7 +21,7 @@ trait DefaultLogger
     public function getLogger()
     {
         if ( is_null( $this->logger ) ) {
-            $this->logger = new Logger( 'Null-Logger' );
+            $this->logger = new Logger( 'Null-Logger', [ new NullHandler() ] );
         }
         return $this->logger;
     }
