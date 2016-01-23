@@ -2,6 +2,7 @@
 
 use Birke\GeofencyProxy\LoggerFactory;
 use Birke\GeofencyProxy\MappingEngine;
+use Birke\GeofencyProxy\ParameterCheckException;
 use Birke\GeofencyProxy\RequestFactory;
 use GuzzleHttp\Client;
 use Symfony\Component\Yaml\Yaml;
@@ -23,4 +24,11 @@ $parameterCheckFactory = new \Birke\GeofencyProxy\ParameterCheckFactory( $loggin
 $mappingEngine = MappingEngine::createFromConfig( $config['mappings'], $client, $parameterCheckFactory, new RequestFactory() );
 
 header( 'Content-Type: text/plain' );
-printf( "%d rule(s) matched\n", $mappingEngine->processParameters( $_POST ) );
+try {
+    $processedParams = $mappingEngine->processParameters( $_POST );
+    printf( "%d rule(s) matched\n", $processedParams );
+}
+catch ( ParameterCheckException $e ) {
+    echo "Error while matching rules.\n";
+}
+

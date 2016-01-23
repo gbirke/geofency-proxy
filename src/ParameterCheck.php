@@ -49,7 +49,7 @@ class ParameterCheck
         }
         catch( SyntaxError $e ) {
             $this->getLogger()->info( $e->getMessage(), [ 'parameters' => $parameters ] );
-            return false;
+            throw new ParameterCheckException( $e->getMessage() );
         }
     }
 
