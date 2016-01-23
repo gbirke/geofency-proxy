@@ -2,6 +2,7 @@
 
 namespace Birke\GeofencyProxy;
 
+use Monolog\Handler\NullHandler;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Psr\Log\LoggerInterface;
@@ -13,12 +14,12 @@ class LoggerFactory
 
     public static function createFromConfig( array $config ) {
         $instance = new self();
+        $nullHandler = new NullHandler();
         $handler = new StreamHandler( $config['file'], Logger::DEBUG );
         $ruleErrors = new Logger( 'rule-errors');
         $instance->setRuleLogger( $ruleErrors );
-        if ( !empty($config['rule_errors']) ) {
-            $ruleErrors->setHandlers( [$handler] );
-        }
+        $ruleHandler = empty( $config['rule_errors'] ) ? $nullHandler : $handler;
+        $ruleErrors->setHandlers( [ $ruleHandler ] );
         return $instance;
     }
 
