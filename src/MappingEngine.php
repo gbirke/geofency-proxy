@@ -26,9 +26,11 @@ class MappingEngine
     }
 
     public function processParameters( $params ) {
+        $numMappingsProcessed = 0;
         foreach( $this->mappings as $map ) {
-            $map->sendRequestIfParamMatches( $params );
+            $numMappingsProcessed += $map->sendRequestIfParamMatches( $params ) ? 1 : 0;
         }
+        return $numMappingsProcessed;
     }
 
 
@@ -38,7 +40,7 @@ class MappingEngine
      * @param RequestFactory $requestFactory
      * @return MappingEngine
      */
-    public static function createFromConfig( $config, $client, $requestFactory ) {
+    public static function createFromConfig( array $config, ClientInterface $client, RequestFactory $requestFactory ) {
         $mappings = [];
         $lang = new ExpressionLanguage();
         foreach ( $config as $mapConfig ) {

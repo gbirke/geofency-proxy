@@ -1,5 +1,10 @@
 <?php
 
+use Birke\GeofencyProxy\MappingEngine;
+use Birke\GeofencyProxy\RequestFactory;
+use GuzzleHttp\Client;
+use Symfony\Component\Yaml\Yaml;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $configName = __DIR__ . '/../config.yml';
@@ -7,9 +12,11 @@ if ( !file_exists( $configName ) ) {
     echo "Config file $configName not found.\n";
     exit( 1 );
 }
-$config = \Symfony\Component\Yaml\Yaml::parse( file_get_contents( $configName ) );
-print_r($config);
+$config = Yaml::parse( file_get_contents( $configName ) );
 
-// TODO: Create guzzle client
-// TODO: create mappingEngine from config
-// TODO: send POST to mappingEngine
+$client = new Client();
+
+$mappingEngine = MappingEngine::createFromConfig( $config['mappings'], $client, new RequestFactory() );
+
+header( 'Content-Type: text/plain' );
+printf( "%d rule(s) matched\n", $mappingEngine->processParameters( $_POST ) );

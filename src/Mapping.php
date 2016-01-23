@@ -16,6 +16,7 @@ class Mapping
     private $parameterCheck;
     private $client;
     private $request;
+    private $lastResponse;
 
     /**
      * Mapping constructor.
@@ -32,8 +33,10 @@ class Mapping
 
     public function sendRequestIfParamMatches( $params ) {
         if ( $this->parameterCheck->parametersMatch( $params ) ) {
-            $this->client->send( $this->request );
+            $this->lastResponse = $this->client->send( $this->request );
+            return true;
         }
+        return false;
     }
 
 }
