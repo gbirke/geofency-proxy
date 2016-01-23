@@ -18,7 +18,8 @@ class MappingEngineIntegrationTest extends PHPUnit_Framework_TestCase
 
         } ) );
         $requestFactory = new RequestFactory();
-        $mappingEngine = MappingEngine::createFromConfig( $config['mappings'], $client, $requestFactory );
+        $parameterCheckFactory = new \Birke\GeofencyProxy\ParameterCheckFactory();
+        $mappingEngine = MappingEngine::createFromConfig( $config['mappings'], $client, $parameterCheckFactory, $requestFactory );
         $processed = $mappingEngine->processParameters( [ 'entry' => '0', 'name' => 'Home' ] );
         $this->assertSame( 1, $processed );
 
