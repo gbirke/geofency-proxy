@@ -2,6 +2,7 @@
 logging:
   file: proxy.log
   rule_errors: true
+  response: true
 mappings:
   - name: "Set Presence to 'ON' when entering geofence"
     rules:

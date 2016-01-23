@@ -23,23 +23,4 @@ class MappingEngine
         }
         return $numMappingsProcessed;
     }
-
-
-    /**
-     * @param array $config
-     * @param ClientInterface $client
-     * @param ParameterCheckFactory $parameterCheckFactory
-     * @param RequestFactory $requestFactory
-     * @return MappingEngine
-     */
-    public static function createFromConfig( array $config, ClientInterface $client, ParameterCheckFactory $parameterCheckFactory,
-                                             RequestFactory $requestFactory ) {
-        $mappings = [];
-        foreach ( $config as $mapConfig ) {
-            $check = $parameterCheckFactory->createWithRules( $mapConfig['rules'] );
-            $mappings[] = new Mapping( $check, $client, $requestFactory->create( $mapConfig['request'] ) );
-        }
-        return new self( $mappings );
-    }
-
 }

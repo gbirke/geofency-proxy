@@ -21,7 +21,13 @@ $client = new Client();
 $logging = LoggerFactory::createFromConfig( $config['logging'] );
 $parameterCheckFactory = new \Birke\GeofencyProxy\ParameterCheckFactory( $logging->getRuleLogger() );
 
-$mappingEngine = MappingEngine::createFromConfig( $config['mappings'], $client, $parameterCheckFactory, new RequestFactory() );
+$mappingEngine = \Birke\GeofencyProxy\MappingFactory::createMappingEngineFromConfig(
+    $config['mappings'],
+    $parameterCheckFactory,
+    new RequestFactory(),
+    $client,
+    $logging->getResponseLogger()
+);
 
 header( 'Content-Type: text/plain' );
 try {

@@ -9,14 +9,19 @@
 namespace Birke\GeofencyProxy;
 
 use GuzzleHttp\ClientInterface;
+use Psr\Log\LoggerInterface;
 use Psr\Http\Message\RequestInterface;
 
 class Mapping
 {
+    use DefaultLogger;
+
     private $parameterCheck;
     private $client;
     private $request;
     private $lastResponse;
+
+    private $logger;
 
     /**
      * Mapping constructor.
@@ -34,9 +39,21 @@ class Mapping
     public function sendRequestIfParamMatches( $params ) {
         if ( $this->parameterCheck->parametersMatch( $params ) ) {
             $this->lastResponse = $this->client->send( $this->request );
+            $content = [ 'headers' =>  $this->lastResponse->getHeaders() ];
+            $this->getLogger()->info( $this->lastResponse->getBody()->getContents(), $content );
             return true;
         }
         return false;
     }
+
+    /**
+     * @param LoggerInterface $logger
+     */
+    public function setLogger($logger)
+    {
+        $this->logger = $logger;
+    }
+
+
 
 }
