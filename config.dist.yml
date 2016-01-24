@@ -7,6 +7,8 @@ logging:
   rule_errors: true
   # Log response from the server
   response: true
+  # Log POST request parameters
+  request: true
 # Map incoming POST parameters to outgoing HTTP requests
 #
 # The incoming POST parameters can be checked against specific values with rules.

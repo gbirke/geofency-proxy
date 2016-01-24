@@ -10,7 +10,7 @@ use Symfony\Component\Yaml\Yaml;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-if ( empty( $_POST ) ) {
+if ( $_SERVER[ 'REQUEST_METHOD' ] !== 'POST' ) {
     header( 'HTTP/1.0 405 Method Not Allowed' );
     header( 'Content-Type: text/plain' );
     die( "Only POST requests accepted" );
@@ -36,6 +36,18 @@ $mappingEngine = MappingFactory::createMappingEngineFromConfig(
     $client,
     $logging->getResponseLogger()
 );
+
+$from = "remote host";
+foreach ( ['REMOTE_HOST', 'HTTP_HOST', 'REMOTE_ADDR'] as $fromName ) {
+    if ( !empty( $_SERVER[$fromName] ) ) {
+        $from = $_SERVER[$fromName];
+        break;
+    }
+}
+
+$logging->getRequestLogger()->info( 'Request from ' . $fromName, [
+    'parameters' => $_POST,
+] );
 
 header( 'Content-Type: text/plain' );
 try {

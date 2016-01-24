@@ -15,18 +15,25 @@ class LoggerFactory
     /** @var LoggerInterface  */
     private $responseLogger;
 
+    /** @var  LoggerInterface */
+    private $requestLogger;
+
     public static function createFromConfig( array $config ) {
         $instance = new self();
         $nullHandler = new NullHandler();
-        $handler = new StreamHandler( $config['file'], Logger::DEBUG );
-        $ruleErrors = new Logger( 'rule-errors');
-        $response = new Logger( 'response' );
-        $instance->setRuleLogger( $ruleErrors );
-        $instance->setResponseLogger( $response );
+        $handler = empty( $config['file'] ) ? $nullHandler : new StreamHandler( $config['file'], Logger::DEBUG );
+        $ruleErrorLogger = new Logger( 'rule-errors');
+        $responseLogger = new Logger( 'response' );
+        $requestLogger = new Logger( 'request' );
+        $instance->setRuleLogger( $ruleErrorLogger );
+        $instance->setResponseLogger( $responseLogger );
+        $instance->setRequestLogger( $requestLogger );
         $ruleHandler = empty( $config['rule_errors'] ) ? $nullHandler : $handler;
         $responseHandler = empty( $config['response'] ) ? $nullHandler : $handler;
-        $ruleErrors->setHandlers( [ $ruleHandler ] );
-        $response->setHandlers( [$responseHandler] );
+        $requestHandler =  empty( $config['request'] ) ? $nullHandler : $handler;
+        $ruleErrorLogger->setHandlers( [ $ruleHandler ] );
+        $responseLogger->setHandlers( [$responseHandler] );
+        $requestLogger->setHandlers( [$requestHandler] );
         return $instance;
     }
 
@@ -62,6 +69,20 @@ class LoggerFactory
         $this->responseLogger = $responseLogger;
     }
 
+    /**
+     * @return LoggerInterface
+     */
+    public function getRequestLogger()
+    {
+        return $this->requestLogger;
+    }
 
+    /**
+     * @param LoggerInterface $requestLogger
+     */
+    public function setRequestLogger($requestLogger)
+    {
+        $this->requestLogger = $requestLogger;
+    }
 
 }
