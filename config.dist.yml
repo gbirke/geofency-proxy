@@ -1,8 +1,37 @@
 ---
+# Logging rules ( mostly for debugging ). Remove 'file' property to turn off logging
 logging:
+  # Where to put the log file
   file: proxy.log
+  # Log errors when a defined rule throws a syntax errors, e.g. when the request does not contain the parameter that is checked
   rule_errors: true
+  # Log response from the server
   response: true
+# Map incoming POST parameters to outgoing HTTP requests
+#
+# The incoming POST parameters can be checked against specific values with rules.
+# Rules can contain string and numeric comparisons.
+# All rules must match for a mapping to fire the request.
+#
+# When used with GeoFency, rules can check the following parameters
+# id: Location identifier
+# name: Name of the location
+# entry: 1 if the location was entered, 0 if the location was left
+# date: timestamp of the location event
+# latitude: Geocoordinate
+# longitude: Geocoordinate
+# address: Address string of the location
+# radius: Radius of the geofence
+# device: Device ID of the device that sent the event
+# beaconUUID: iBeacon UUID
+# major: Major ID of the iBeacon
+# minor: Minor ID of the iBeacon
+#
+# For the Requests, the request body, the URL and the request method can be defined.
+# At the moment, the outgoing Requests are tailored to the OpenHAB REST API. meaning
+# the requestbody content type is `text/plain`.
+#
+# The name of each rule is optional and not used at the moment
 mappings:
   - name: "Set Presence to 'ON' when entering geofence"
     rules:
